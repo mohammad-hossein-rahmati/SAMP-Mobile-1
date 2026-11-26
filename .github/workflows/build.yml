@@ -2,7 +2,7 @@ name: Build APK
 
 on:
   push:
-    branches: [ patch-1 ] # اگر اسم برنچت چیز دیگه‌ایه، اینجا عوضش کن
+    branches: [ patch-1 ] # اگر اسم برنچت متفاوته، اینجا عوضش کن
   workflow_dispatch:
 
 jobs:
@@ -20,7 +20,9 @@ jobs:
           java-version: '17'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4.0.4
+        with:
+          packages: 'platform-tools'
 
       - name: Accept Licenses & Install NDK
         run: |
