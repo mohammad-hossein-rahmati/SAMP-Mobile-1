@@ -2,7 +2,7 @@ name: Build APK
 
 on:
   push:
-    branches: [ patch-1 ] # اگر اسم برنچت متفاوته، اینجا عوضش کن
+    branches: [ patch-1 ] # نام برنچ خود را در صورت نیاز تغییر دهید
   workflow_dispatch:
 
 jobs:
@@ -24,16 +24,22 @@ jobs:
         with:
           packages: 'platform-tools'
 
+      - name: Install Build Dependencies
+        run: |
+          # نصب ninja-build که برای کامپایل C++ در برخی پروژه‌ها ضروری است
+          sudo apt-get update
+          sudo apt-get install -y ninja-build
+
       - name: Accept Licenses & Install NDK
         run: |
-          # پذیرش خودکار تمام لایسنس‌ها
           yes | sdkmanager --licenses > /dev/null 2>&1 || true
-          
-          # نصب نسخه دقیق NDK و CMake مورد نیاز پروژه
           sdkmanager --install "ndk;26.2.11394342" "cmake;3.22.1"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Clean Gradle Cache (اختیاری اما توصیه‌شده)
+        run: ./gradlew clean
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
